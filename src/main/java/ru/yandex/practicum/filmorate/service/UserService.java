@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.service;
 
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
@@ -27,7 +26,6 @@ public class UserService {
         return user;
     }
 
-    @Valid
     // Обновление пользователя
     public User updateUser(User user) {
         if (!getAllUsers().contains(user)) {
