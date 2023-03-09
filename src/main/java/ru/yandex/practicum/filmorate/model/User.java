@@ -29,11 +29,25 @@ public class User {
     private String login;
 
     @NotNull(message = "birthday не может быть пустым")
-    @NotBlank(message = "birthday не может быть пустым")
     @Past(message = "Дата рождения не должна быть позже настоязего времени")
     private LocalDate birthday;
 
-    @NotNull(message = "Логин не может быть пустым")
-    @NotBlank(message = "Имя не может содержать пробелы")
     private String name;
+
+    public User(int id, String email, String login, LocalDate birthday, String name) {
+        this.id = id;
+        this.email = email;
+        this.login = login;
+        this.birthday = birthday;
+        this.name = getNameOrLogin( name, login);
+    }
+
+    private String getNameOrLogin(String name, String login) {
+        if (name == null || name.isBlank()) {
+            log.info("Имя пустое по этому ставится логин");
+            return login;
+        } else {
+            return name;
+        }
+    }
 }

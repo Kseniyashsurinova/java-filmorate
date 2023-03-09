@@ -12,7 +12,7 @@
     <artifactId>filmorate</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>filmorate</name>
-    <description>Приложение для работы с фильмами и оценками пользователей, способное возвращать топ-5 фильмов, рекомендованных к просмотру</description>
+    <description>///</description>
     <properties>
         <java.version>11</java.version>
     </properties>
