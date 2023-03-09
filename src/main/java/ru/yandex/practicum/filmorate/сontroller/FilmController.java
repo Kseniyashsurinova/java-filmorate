@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.сontroller;
 
-
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ public class FilmController {
     private final FilmService filmService;
 
     @PostMapping()
-    public Film addFilm(@RequestBody Film film) {
+    public Film addFilm(@Valid @RequestBody Film film) {
         log.debug("Запрос создание нового пользователя");
         return filmService.addFilm(film);
     }
@@ -31,9 +31,8 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film updateFilm(@RequestBody Film film) {
+    public Film updateFilm(@Valid @RequestBody Film film) {
         log.debug("Запрос обновления пользователя");
         return filmService.updateFilm(film);
     }
-
 }

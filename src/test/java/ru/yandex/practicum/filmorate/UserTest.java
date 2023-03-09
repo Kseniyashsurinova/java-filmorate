@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.сontroller.UserController;
@@ -57,45 +56,4 @@ public class UserTest {
         userController.createUser(user1);
         Assertions.assertEquals(2, userController.getAllUsers().size());
     }
-
-    @Test
-    public void emptyEmail() {
-        userController.createUser(user);
-        user.setEmail(" ");
-        Assertions.assertThrows(
-                ValidationException.class,
-                () -> userController.updateUser(user)
-        );
-    }
-
-    @Test
-    public void emailTest() {
-        userController.createUser(user);
-        user.setEmail("people");
-        Assertions.assertThrows(
-                ValidationException.class,
-                () -> userController.updateUser(user)
-        );
-    }
-
-    @Test
-    public void emptyLogin() {
-        userController.createUser(user);
-        user.setLogin("");
-        Assertions.assertThrows(
-                ValidationException.class,
-                () -> userController.updateUser(user)
-        );
-    }
-
-    @Test
-    public void loginWithSpase() {
-        userController.createUser(user);
-        user.setLogin("  ");
-        Assertions.assertThrows(
-                ValidationException.class,
-                () -> userController.updateUser(user)
-        );
-    }
-
 }

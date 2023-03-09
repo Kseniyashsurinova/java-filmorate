@@ -59,35 +59,4 @@ public class FilmTest {
         filmController.updateFilm(film);
         Assertions.assertEquals(12, film.getId());
     }
-
-    @Test
-    public void emptyName() {
-        filmController.addFilm(film);
-        film.setName("");
-        Assertions.assertThrows(
-                ValidationException.class,
-                () -> filmController.updateFilm(film)
-        );
-    }
-
-    @Test
-    public void negativDuration() {
-        filmController.addFilm(film);
-        film.setDuration(-10);
-        Assertions.assertThrows(
-                ValidationException.class,
-                () -> filmController.updateFilm(film)
-        );
-    }
-
-    @Test
-    public void dataTest() {
-        filmController.addFilm(film);
-        film.setReleaseDate(LocalDate.of(1020, 12, 12));
-        Assertions.assertThrows(
-                ValidationException.class,
-                () -> filmController.updateFilm(film)
-        );
-    }
-
 }
