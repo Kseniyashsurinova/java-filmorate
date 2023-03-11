@@ -20,12 +20,10 @@ public class User {
     private int id;
 
     @Email(message = "Электронная почта должна содержать @")
-    @NotNull(message = "Почта не может быть пусто")
     @NotBlank(message = "Почта не может быть пусто")
     private String email;
 
     @NotNull(message = "Логин не может быть пустым")
-    @NotBlank(message = "Логин не может быть пустым")
     private String login;
 
     @NotNull(message = "birthday не может быть пустым")

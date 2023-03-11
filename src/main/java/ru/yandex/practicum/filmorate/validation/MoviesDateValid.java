@@ -3,17 +3,15 @@ package ru.yandex.practicum.filmorate.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
+import java.time.Month;
 
 public class MoviesDateValid implements ConstraintValidator<MoviesDate, LocalDate> {
 
-    @Override
-    public void initialize(MoviesDate constraintAnnotation) {
-        ConstraintValidator.super.initialize(constraintAnnotation);
-    }
+    private static final LocalDate FIRST_MOVIE_DATE
+            = LocalDate.of(1895, Month.DECEMBER, 28);
 
     @Override
     public boolean isValid(LocalDate localDate, ConstraintValidatorContext constraintValidatorContext) {
-        LocalDate firstDate = LocalDate.parse("1895-12-28");
-        return localDate.isAfter(firstDate);
+        return localDate.isAfter(FIRST_MOVIE_DATE);
     }
 }

@@ -17,10 +17,10 @@ import java.time.LocalDate;
 @Builder
 public class Film {
 
+
     @EqualsAndHashCode.Exclude
     private int id;
 
-    @NotNull(message = "Название не может быть пустым")
     @NotBlank(message = "Название не может быть пустым")
     private String name;
 
@@ -33,7 +33,6 @@ public class Film {
     private Integer duration;
 
     @NotNull(message = "Дата релиза не может быть пустым")
-    @NotBlank(message = "Дата релиза не может быть пустым")
     @MoviesDate(message = "Дата релиза раньше 28 декабря 1895 года")
     private LocalDate releaseDate;
 }
