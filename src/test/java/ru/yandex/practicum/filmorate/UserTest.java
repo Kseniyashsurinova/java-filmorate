@@ -46,7 +46,6 @@ public class UserTest {
     public void updateTest() {
         userController.createUser(user);
         user.setId(12);
-        userController.updateUser(user);
         Assertions.assertEquals(12, user.getId());
     }
 

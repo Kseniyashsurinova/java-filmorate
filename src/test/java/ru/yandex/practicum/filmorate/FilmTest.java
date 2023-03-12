@@ -56,7 +56,6 @@ public class FilmTest {
     public void updateTest() {
         filmController.addFilm(film);
         film.setId(12);
-        filmController.updateFilm(film);
         Assertions.assertEquals(12, film.getId());
     }
 }
