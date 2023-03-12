@@ -28,7 +28,7 @@ public class UserService {
 
     // Обновление пользователя
     public User updateUser(User user) {
-        if (!getAllUsers().contains(user)) {
+        if (!users.containsKey(user.getId())) {
             throw new ValidationException("Пользователь с Id " + user.getId() + " не найден");
         }
         users.replace(user.getId(), user);

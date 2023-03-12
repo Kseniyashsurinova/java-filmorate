@@ -27,7 +27,7 @@ public class FilmService {
 
     // Обновление нового фильма
     public Film updateFilm(Film film) {
-        if (!getAllFilms().contains(film)) {
+        if (!films.containsKey(film.getId())) {
             throw new ValidationException("Фильм не найден");
         }
         films.replace(film.getId(), film);
