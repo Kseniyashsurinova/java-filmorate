@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.сontroller.UserController;
 
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ public class UserTest {
 
     @BeforeEach
     void beforeEach() {
-        userController = new UserController(new UserService());
+        userController = new UserController(new UserService(new InMemoryUserStorage()));
         user = User.builder()
                 .id(1)
                 .email("people@ya.ru")
@@ -54,5 +55,11 @@ public class UserTest {
         userController.createUser(user);
         userController.createUser(user1);
         Assertions.assertEquals(2, userController.getAllUsers().size());
+    }
+
+    @Test
+    public void getByIdTest() {
+        userController.createUser(user);
+        Assertions.assertEquals(user, userController.getUserById(1));
     }
 }

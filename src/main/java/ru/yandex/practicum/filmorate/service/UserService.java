@@ -1,45 +1,54 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @Service
 public class UserService {
+    private final UserStorage userStorage;
 
-    private final Map<Integer, User> users = new HashMap<>();
-    private int newId = 1;
+    @Autowired
+    public UserService( UserStorage userStorage) {
+        this.userStorage = userStorage;
+    }
 
-    // Создание нового пользователя
     public User createUser(User user) {
-            user.setId(newId);
-            users.put(user.getId(), user);
-            newId++;
-            log.debug("Пользователь с Id " + user.getId() + " успешно создан");
-        return user;
+        return userStorage.createUser(user);
     }
 
-    // Обновление пользователя
     public User updateUser(User user) {
-        if (!users.containsKey(user.getId())) {
-            throw new ValidationException("Пользователь с Id " + user.getId() + " не найден");
-        }
-        users.replace(user.getId(), user);
-        log.debug("Пользователь успешно обновдён");
-        return user;
+        return userStorage.updateUser(user);
     }
 
-    // Возвращает всех пользователей
     public Collection<User> getAllUsers() {
-        log.debug("Запрошен список всех пользователей");
-        return new ArrayList<>(users.values());
+        return userStorage.getAllUsers();
+    }
+
+    public User getUserById(int id) {
+        return userStorage.getUserById(id);
+    }
+
+    public User addFriend(int userId, int friendId) {
+        return userStorage.addFriend(userId, friendId);
+    }
+
+    public void removeFriend(int userId, int friendId) {
+        userStorage.removeFriend(userId, friendId);
+    }
+
+    public Collection<User> getFriends(int Id) {
+        return userStorage.getFriends(Id);
+    }
+
+    public ArrayList<User> getCommonFriends(int user1Id, int user2Id) {
+        return userStorage.getCommonFriends(user1Id, user2Id);
     }
 
 }

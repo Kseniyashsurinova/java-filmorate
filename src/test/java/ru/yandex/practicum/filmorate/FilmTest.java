@@ -1,18 +1,25 @@
 package ru.yandex.practicum.filmorate;
 
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.сontroller.FilmController;
 
 import java.time.LocalDate;
 
 @SpringBootTest
+@AutoConfigureTestDatabase
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FilmTest {
 
     private Film film;
@@ -21,7 +28,7 @@ public class FilmTest {
 
     @BeforeEach
     void beforeEach() {
-        filmController = new FilmController(new FilmService());
+        filmController = new FilmController(new FilmService(new InMemoryFilmStorage()));
         film = Film.builder()
                 .id(1)
                 .name("Name")
