@@ -10,6 +10,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Slf4j
 @Data
@@ -31,13 +33,15 @@ public class User {
     private LocalDate birthday;
 
     private String name;
+    private Set<Integer> friends = new HashSet<>();
 
-    public User(int id, String email, String login, LocalDate birthday, String name) {
+    public User(int id, String email, String login, LocalDate birthday, String name, Set<Integer> friends ) {
         this.id = id;
         this.email = email;
         this.login = login;
         this.birthday = birthday;
-        this.name = getNameOrLogin( name, login);
+        this.name = getNameOrLogin(name, login);
+        this.friends = friends;
     }
 
     private String getNameOrLogin(String name, String login) {
@@ -48,4 +52,5 @@ public class User {
             return name;
         }
     }
+
 }

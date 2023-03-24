@@ -11,12 +11,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Slf4j
 @Data
 @Builder
 public class Film {
-
 
     @EqualsAndHashCode.Exclude
     private int id;
@@ -35,5 +36,11 @@ public class Film {
     @NotNull(message = "Дата релиза не может быть пустым")
     @MoviesDate(message = "Дата релиза раньше 28 декабря 1895 года")
     private LocalDate releaseDate;
+
+    private Set<Integer> likes = new HashSet<>();
+
+    public void deleteLike(Integer id){
+        likes.remove(id);
+    }
 }
 
