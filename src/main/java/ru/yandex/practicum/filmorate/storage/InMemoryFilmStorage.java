@@ -47,7 +47,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     //Получить фильмов по айди
     @Override
-    public Film getFilmById(int filmId) throws NotFoundException {
+    public Film getFilmById(int filmId)  {
         if(!films.containsKey(filmId)){
             throw new NotFoundException("фильм не найден");
         }
@@ -57,21 +57,22 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     // Добавление лайков
     @Override
-    public void addLikes(int filmId, int like) {
+    public void addLikes(int filmId, int userId) {
         Film film = getFilmById(filmId);
-        film.getLikes().add(like);
+        film.setLikes(Collections.singleton(userId));
         log.debug("Добавление лайков");
         updateFilm(film);
     }
 
     // Удаление лайков
     @Override
-    public void removeLikes(int filmId, int like) throws NotFoundException{
-        if(filmId <0 || like< 0){
+    public void removeLikes(int filmId, int like) throws NotFoundException {
+        if (filmId < 0 || like < 0) {
             throw new NotFoundException("Отрицательное значение");
         }
         Film film = getFilmById(filmId);
-        film.getLikes().remove(like);
+        // film.getLikes().remove(getFilmById(filmId));
+        film.deleteLike(like);
         log.debug("Удаление лайков");
         updateFilm(film);
     }

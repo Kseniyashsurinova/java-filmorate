@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping//("films")
 @Slf4j
 
 public class FilmController {
@@ -23,34 +23,34 @@ public class FilmController {
 
     private final FilmService filmService;
 
-    @PostMapping("films/")
+    @PostMapping("/films")
     public Film addFilm(@Valid @RequestBody Film film) {
         log.debug("Запрос создание нового пользователя");
         return filmService.addFilm(film);
     }
 
-    @GetMapping("films/")
+    @GetMapping("/films")
     public Collection<Film> getAllFilms() {
         log.debug("Запрошен список всех пользователей");
         return filmService.getAllFilms();
     }
 
-    @PutMapping("films/{id}")
+    @PutMapping("/users/{id}/friends")
     public Film getFilmById(@PathVariable int id) {
         log.debug("Получен фильм по id");
         return filmService.getFilmById(id);
     }
 
-    @PutMapping("films/")
+    @PutMapping("/films")
     public Film updateFilm(@Valid @RequestBody Film film) {
         log.debug("Запрос обновления пользователя");
         return filmService.updateFilm(film);
     }
 
     @PutMapping("/films/{id}/like/{userId}")
-    public void addLikes(@PathVariable int id, @PathVariable int like) {
+    public void addLikes(@PathVariable int id, @PathVariable int userId) {
         log.debug("пользователь ставит лайк фильму");
-        filmService.addLikes(id, like);
+        filmService.addLikes(id, userId);
     }
 
     @DeleteMapping("/films/{id}/like/{userId}")

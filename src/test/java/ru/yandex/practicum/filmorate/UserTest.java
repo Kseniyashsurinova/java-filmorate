@@ -10,11 +10,13 @@ import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.сontroller.UserController;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 @SpringBootTest
 public class UserTest {
     private User user;
     private User user1;
+    private User user2;
     private UserController userController;
 
     @BeforeEach
@@ -30,6 +32,14 @@ public class UserTest {
 
         user1 = User.builder()
                 .id(5)
+                .email("mmm@ya.ru")
+                .login("mmm")
+                .name("New")
+                .birthday(LocalDate.of(2000, 5, 11))
+                .build();
+
+        user2 = User.builder()
+                .id(6)
                 .email("mmm@ya.ru")
                 .login("mmm")
                 .name("New")
@@ -61,5 +71,35 @@ public class UserTest {
     public void getByIdTest() {
         userController.createUser(user);
         Assertions.assertEquals(user, userController.getUserById(1));
+    }
+
+    @Test
+    public void addFriends() {
+        userController.createUser(user);
+        userController.createUser(user1);
+        userController.addFriend(user.getId(), user1.getId());
+        Assertions.assertEquals(1, user.getFriends().size());
+        userController.getFriend(user.getId());
+        Assertions.assertEquals(user1.getId(), 2);
+    }
+
+  /*  @Test
+    public void removeFriend() {
+        userController.createUser(user);
+        userController.createUser(user1);
+        userController.addFriend(user.getId(), user1.getId());
+        userController.removeFriend(user1.getId(), user.getId());
+        Assertions.assertEquals(0, userController.getFriend(user1.getId()));
+    }*/
+
+    @Test
+    public void getCommonFriends() {
+        userController.createUser(user);
+        userController.createUser(user1);
+        userController.createUser(user2);
+        userController.addFriend(user.getId(), user2.getId());
+        userController.addFriend(user1.getId(), user2.getId());
+        Assertions.assertEquals(userController.getCommonFriends(user.getId(),
+                user1.getId()), userController.getFriend(user.getId()));
     }
 }

@@ -6,10 +6,7 @@ import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -20,17 +17,21 @@ public class InMemoryUserStorage implements UserStorage {
 
     // Создание нового пользователя
     @Override
-    public User createUser(User user) {
-        user.setId(newId);
-        users.put(user.getId(), user);
-        newId++;
-        log.debug("Пользователь с Id " + user.getId() + " успешно создан");
-        return user;
+    public User createUser(User user) throws ValidationException {
+        if (!users.containsKey(user.getId())) {
+            user.setId(newId);
+            users.put(user.getId(), user);
+            newId++;
+            log.debug("Пользователь с Id " + user.getId() + " успешно создан");
+            return user;
+        } else {
+            throw new NotFoundException("Пользователь с Id " + user.getId() + " уже добавлен");
+        }
     }
 
     // Обновление пользователя
     @Override
-    public User updateUser(User user) {
+    public User updateUser(User user) throws ValidationException {
         if (!users.containsKey(user.getId())) {
             throw new NotFoundException("Пользователь с Id " + user.getId() + " не найден");
         }
@@ -58,18 +59,18 @@ public class InMemoryUserStorage implements UserStorage {
 
     // Добавить список друзей
     @Override
-    public User addFriend(int id, int friendId) {
-        if (!users.containsKey(id) || !users.containsKey(friendId)) {
-            throw new NotFoundException("пользователя не найден");
-        } else if (!users.containsKey(id) && !users.containsKey(friendId)) {
-            throw new NotFoundException("пользователя не найден");
+    public User addFriend(Integer id, Integer friendId) throws NotFoundException {
+        if (!users.containsKey(id)) {
+            throw new NotFoundException("Один из пользователей не найден");
+        } else if (!users.containsKey(friendId)) {
+            throw new NotFoundException("Один из пользователей не найден");
         } else {
             User user = getUserById(id);
             User friend = getUserById(friendId);
-            user.addFriends(friendId);
+            user.setFriends(Collections.singleton(friendId));
             log.debug("Добавлен новый друг пользователю");
             updateUser(user);
-            friend.addFriends(id);
+            friend.setFriends(Collections.singleton(id));
             log.debug("Другу добавляется пользователь");
             updateUser(friend);
             return user;
@@ -77,25 +78,31 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void removeFriend(int id, int friendId) {
+    public void removeFriend(Integer id, Integer friendId) {
         if (!users.containsKey(id)) {
             throw new NotFoundException("пользователя не найден");
+        } else if (!users.containsKey(friendId)) {
+            throw new NotFoundException("пользователя не найден");
+        } else {
+            User user = getUserById(id);
+            User friend = getUserById(friendId);
+            getFriend(id).remove(getUserById(friendId));
+            updateUser(user);
+            log.debug("Друг удалён у пользователя");
+
+            getFriend(friendId).remove(getUserById(id));
+            log.debug("Пользователь удален у друга");
+            updateUser(friend);
         }
-        User user = getUserById(id);
-        User friend = getUserById(friendId);
-        user.getFriends().remove(friendId);
-        log.debug("Друг удалён у пользователя");
-        friend.getFriends().remove(id);
-        log.debug("Пользователь удален у друга");
     }
 
     @Override
-    public Collection<User> getFriends(int id) {
+    public Set<User> getFriend(int id) {
+        Set<User> friendList = new HashSet<>();
+        User user1 = getUserById(id);
         if (!users.containsKey(id)) {
             throw new NotFoundException("пользователя не найден");
         }
-        ArrayList<User> friendList = new ArrayList<>();
-        User user1 = getUserById(id);
         for (int users : user1.getFriends()) {
             friendList.add(getUserById(users));
         }
@@ -103,18 +110,23 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public ArrayList<User> getCommonFriends(int user1Id, int user2Id) {
-        ArrayList<User> commonFriendsList = new ArrayList<>();
+    public Set<User> getCommonFriends(int user1Id, int user2Id) {
+        Set<Integer> friendsList = new HashSet<>(Set.copyOf(getUserById(user1Id).getFriends()));
+        friendsList.retainAll(getUserById(user2Id).getFriends());
+        Set<User> commonFriendsList = new HashSet<>();
         User user1 = getUserById(user1Id);
-        User user2 = getUserById(user2Id);
-        for (int userNum1 : user1.getFriends()) {
-            for (int userNum2 : user2.getFriends()) {
-                if (userNum1 == userNum2) {
-                    commonFriendsList.add(getUserById(userNum2));
-                }
-            }
+        if (user1 == null) {
+            throw new NotFoundException("пользователя не найден");
         }
+        User user2 = getUserById(user2Id);
+        if (user2 == null) {
+            throw new NotFoundException("пользователя не найден");
+        }
+        for (Integer id : friendsList) {
+            commonFriendsList.add(getUserById(id));
+        }
+        log.info("Вывод общих друзей");
+
         return commonFriendsList;
     }
-
 }

@@ -53,7 +53,4 @@ public class User {
         }
     }
 
-    public void addFriends(int friendId) {
-        friends.add(friendId);
-    }
 }
