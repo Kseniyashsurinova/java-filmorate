@@ -84,15 +84,6 @@ public class UserTest {
         Assertions.assertEquals(user1.getId(), 2);
     }
 
-  /*  @Test
-    public void removeFriend() {
-        userController.createUser(user);
-        userController.createUser(user1);
-        userController.addFriend(user.getId(), user1.getId());
-        userController.removeFriend(user1.getId(), user.getId());
-        Assertions.assertEquals(0, userController.getFriend(user1.getId()));
-    }*/
-
     @Test
     public void getCommonFriends() {
         userController.createUser(user);
@@ -102,5 +93,14 @@ public class UserTest {
         userController.addFriend(user1.getId(), user2.getId());
         Assertions.assertEquals(userController.getCommonFriends(user.getId(),
                 user1.getId()), userController.getFriend(user.getId()));
+    }
+
+    @Test
+    public void getFriend() {
+        userController.createUser(user);
+        userController.createUser(user1);
+        userController.createUser(user2);
+        userController.addFriend(user.getId(), user2.getId());
+       // Assertions.assertEquals(user2, userController.getFriend(user.getId()));
     }
 }
