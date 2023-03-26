@@ -61,7 +61,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}/friends")
-    public Collection<User> getFriend(@PathVariable int id) {
+    public Collection<User> getFriend(@PathVariable Integer id) {
         log.debug("Запрос списка всех друзей пользователя");
         return userService.getFriend(id);
     }

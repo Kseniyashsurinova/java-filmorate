@@ -97,7 +97,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Set<User> getFriend(int id) {
+    public Set<User> getFriend(Integer id) {
         Set<User> friendList = new HashSet<>();
         User user1 = getUserById(id);
         if (!users.containsKey(id)) {
