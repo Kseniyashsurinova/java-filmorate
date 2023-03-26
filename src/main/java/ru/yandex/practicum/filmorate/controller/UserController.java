@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.сontroller;
+package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +23,14 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping ("/users")
-    public User createUser(@Valid @RequestBody User user)  {
+    @PostMapping("/users")
+    public User createUser(@Valid @RequestBody User user) {
         log.debug("Запрос создание нового пользователя");
         return userService.createUser(user);
     }
 
     @GetMapping("/users")
-    public Collection<User> getAllUsers()  {
+    public Collection<User> getAllUsers() {
         log.debug("Запрошен список всех пользователей");
         return userService.getAllUsers();
     }

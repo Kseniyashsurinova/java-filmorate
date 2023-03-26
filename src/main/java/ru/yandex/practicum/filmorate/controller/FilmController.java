@@ -1,4 +1,5 @@
-package ru.yandex.practicum.filmorate.сontroller;
+package ru.yandex.practicum.filmorate.controller;
+
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,13 +55,13 @@ public class FilmController {
     }
 
     @DeleteMapping("/films/{id}/like/{userId}")
-    public void removeLikes(@PathVariable int id, @PathVariable int userId){
+    public void removeLikes(@PathVariable int id, @PathVariable int userId) {
         log.debug("пользователь удаляет лайк");
         filmService.removeLikes(id, userId);
     }
 
     @GetMapping("/films/popular")
-    public List<Film> popularFilms(@RequestParam (defaultValue = "10") int amount) {
+    public List<Film> popularFilms(@RequestParam(defaultValue = "10") int amount) {
         log.debug("пользователь удаляет лайк");
         return filmService.popularFilms(amount);
     }
