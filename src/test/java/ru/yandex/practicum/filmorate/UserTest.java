@@ -100,6 +100,6 @@ public class UserTest {
         userController.createUser(user1);
         userController.createUser(user2);
         userController.addFriend(user.getId(), user2.getId());
-       // Assertions.assertEquals(user2, userController.getFriend(user.getId()));
+        // Assertions.assertEquals(user2, userController.getFriend(user.getId()));
     }
 }
