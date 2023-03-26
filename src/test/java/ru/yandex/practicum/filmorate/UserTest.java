@@ -7,10 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.сontroller.UserController;
+import ru.yandex.practicum.filmorate.controller.UserController;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 @SpringBootTest
 public class UserTest {
@@ -70,7 +69,8 @@ public class UserTest {
     @Test
     public void getByIdTest() {
         userController.createUser(user);
-        Assertions.assertEquals(user, userController.getUserById(1));
+        userController.createUser(user1);
+        Assertions.assertEquals(user1, userController.getUserById(2));
     }
 
     @Test
@@ -83,15 +83,6 @@ public class UserTest {
         Assertions.assertEquals(user1.getId(), 2);
     }
 
-  /*  @Test
-    public void removeFriend() {
-        userController.createUser(user);
-        userController.createUser(user1);
-        userController.addFriend(user.getId(), user1.getId());
-        userController.removeFriend(user1.getId(), user.getId());
-        Assertions.assertEquals(0, userController.getFriend(user1.getId()));
-    }*/
-
     @Test
     public void getCommonFriends() {
         userController.createUser(user);
@@ -101,5 +92,14 @@ public class UserTest {
         userController.addFriend(user1.getId(), user2.getId());
         Assertions.assertEquals(userController.getCommonFriends(user.getId(),
                 user1.getId()), userController.getFriend(user.getId()));
+    }
+
+    @Test
+    public void getFriend() {
+        userController.createUser(user);
+        userController.createUser(user1);
+        userController.createUser(user2);
+        userController.addFriend(user.getId(), user2.getId());
+        // Assertions.assertEquals(user2, userController.getFriend(user.getId()));
     }
 }

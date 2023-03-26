@@ -13,7 +13,7 @@ public interface UserStorage {
 
     public Collection<User> getAllUsers();
 
-    public User getUserById(int id);
+    public User getUserById(Integer id);
 
     public User addFriend(Integer id, Integer friendId);
 
@@ -21,6 +21,6 @@ public interface UserStorage {
 
     public Set<User> getCommonFriends(int user1Id, int user2Id);
 
-    public Collection<User> getFriend(int Id);
+    public Collection<User> getFriend(Integer id);
 
 }

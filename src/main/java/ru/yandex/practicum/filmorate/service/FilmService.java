@@ -39,7 +39,7 @@ public class FilmService {
         inMemoryFilmStorage.addLikes(filmId, like);
     }
 
-    public void removeLikes(int filmId, int like){
+    public void removeLikes(int filmId, int like) {
         inMemoryFilmStorage.removeLikes(filmId, like);
     }
 

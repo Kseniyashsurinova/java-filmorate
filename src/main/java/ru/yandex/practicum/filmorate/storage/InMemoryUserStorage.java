@@ -49,7 +49,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     //Получить пользователя по айди
     @Override
-    public User getUserById(int id) {
+    public User getUserById(Integer id) {
         if (!users.containsKey(id)) {
             throw new NotFoundException("пользователя не найден");
         }
@@ -77,6 +77,7 @@ public class InMemoryUserStorage implements UserStorage {
         }
     }
 
+    //удаление друзей
     @Override
     public void removeFriend(Integer id, Integer friendId) {
         if (!users.containsKey(id)) {
@@ -96,8 +97,9 @@ public class InMemoryUserStorage implements UserStorage {
         }
     }
 
+    // вызов друга по айди
     @Override
-    public Set<User> getFriend(int id) {
+    public Set<User> getFriend(Integer id) {
         Set<User> friendList = new HashSet<>();
         User user1 = getUserById(id);
         if (!users.containsKey(id)) {
@@ -109,6 +111,7 @@ public class InMemoryUserStorage implements UserStorage {
         return friendList;
     }
 
+    // сптсок оьщих друзей
     @Override
     public Set<User> getCommonFriends(int user1Id, int user2Id) {
         Set<Integer> friendsList = new HashSet<>(Set.copyOf(getUserById(user1Id).getFriends()));
