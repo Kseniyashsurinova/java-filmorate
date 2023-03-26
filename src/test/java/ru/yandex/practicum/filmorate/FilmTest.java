@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate;
 
+
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,8 +14,8 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.controller.FilmController;
-import ru.yandex.practicum.filmorate.controller.UserController;
+import ru.yandex.practicum.filmorate.сontroller.FilmController;
+import ru.yandex.practicum.filmorate.сontroller.UserController;
 
 import java.time.LocalDate;
 
@@ -78,15 +79,23 @@ public class FilmTest {
     }
 
     @Test
-    public void getFilmById() {
+    public void getFilmById(){
         filmController.addFilm(film);
         Assertions.assertEquals(film, filmController.getFilmById(1));
     }
 
     @Test
-    public void addLikes() {
+    public void addLikes(){
         filmController.addFilm(film);
         filmController.addLikes(user.getId(), 1);
         Assertions.assertEquals(film.getLikes().size(), 1);
     }
+
+   /* @Test
+    public void removeLikes(){
+        filmController.addFilm(film);
+        filmController.addLikes(user.getId(), 2);
+        filmController.removeLikes(user.getId(), 1);
+        Assertions.assertEquals(film.getLikes(), 0);
+    }*/
 }

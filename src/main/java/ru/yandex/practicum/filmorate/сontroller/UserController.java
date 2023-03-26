@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.сontroller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,12 +7,13 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
 @Slf4j
 @RestController
-@RequestMapping
+@RequestMapping//("/users")
 
 public class UserController {
 
@@ -23,14 +24,14 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/users")
-    public User createUser(@Valid @RequestBody User user) {
+    @PostMapping ("/users")
+    public User createUser(@Valid @RequestBody User user)  {
         log.debug("Запрос создание нового пользователя");
         return userService.createUser(user);
     }
 
     @GetMapping("/users")
-    public Collection<User> getAllUsers() {
+    public Collection<User> getAllUsers()  {
         log.debug("Запрошен список всех пользователей");
         return userService.getAllUsers();
     }
@@ -60,7 +61,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}/friends")
-    public Collection<User> getFriend(@PathVariable Integer id) {
+    public Collection<User> getFriend(@PathVariable int id) {
         log.debug("Запрос списка всех друзей пользователя");
         return userService.getFriend(id);
     }
