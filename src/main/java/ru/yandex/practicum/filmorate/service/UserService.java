@@ -32,7 +32,7 @@ public class UserService {
         return inMemoryUserStorage.getAllUsers();
     }
 
-    public User getUserById(int id) {
+    public User getUserById(Integer id) {
         return inMemoryUserStorage.getUserById(id);
     }
 

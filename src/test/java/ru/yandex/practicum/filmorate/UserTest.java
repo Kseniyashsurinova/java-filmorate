@@ -70,7 +70,8 @@ public class UserTest {
     @Test
     public void getByIdTest() {
         userController.createUser(user);
-        Assertions.assertEquals(user, userController.getUserById(1));
+        userController.createUser(user1);
+        Assertions.assertEquals(user1, userController.getUserById(2));
     }
 
     @Test
