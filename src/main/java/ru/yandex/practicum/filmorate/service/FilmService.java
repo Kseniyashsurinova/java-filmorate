@@ -1,44 +1,50 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @Service
 @Slf4j
 public class FilmService {
-    private final Map<Integer, Film> films = new HashMap<>();
-    private int newFilmId = 1;
+    private final InMemoryFilmStorage inMemoryFilmStorage;
 
-    // Добавление нового фильма
+    @Autowired
+    public FilmService(InMemoryFilmStorage inMemoryFilmStorage) {
+        this.inMemoryFilmStorage = new InMemoryFilmStorage();
+    }
+
     public Film addFilm(Film film) {
-        film.setId(newFilmId);
-        films.put(film.getId(), film);
-        newFilmId++;
-        log.debug("Фильм добавлен");
-        return film;
+        return inMemoryFilmStorage.addFilm(film);
     }
 
-    // Обновление нового фильма
     public Film updateFilm(Film film) {
-        if (!films.containsKey(film.getId())) {
-            throw new ValidationException("Фильм не найден");
-        }
-        films.replace(film.getId(), film);
-        log.debug("Фильм успешно обновдён");
-        return film;
+        return inMemoryFilmStorage.updateFilm(film);
     }
 
-    // Список всех фильмов
     public Collection<Film> getAllFilms() {
-        log.debug("Запрошен список всех фильмов");
-        return new ArrayList<>(films.values());
+        return inMemoryFilmStorage.getAllFilms();
+    }
+
+    public Film getFilmById(int filmId) {
+        return inMemoryFilmStorage.getFilmById(filmId);
+    }
+
+    public void addLikes(int filmId, int like) {
+        inMemoryFilmStorage.addLikes(filmId, like);
+    }
+
+    public void removeLikes(int filmId, int like) {
+        inMemoryFilmStorage.removeLikes(filmId, like);
+    }
+
+    public List<Film> popularFilms(int amount) {
+        return inMemoryFilmStorage.topFilms(amount);
     }
 
 }
