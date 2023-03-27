@@ -24,13 +24,13 @@ public class UserController {
     }
 
     @PostMapping ("/users")
-    public User createUser(@Valid @RequestBody User user)  {
+    public User createUser(@Valid @RequestBody User user) {
         log.debug("Запрос создание нового пользователя");
         return userService.createUser(user);
     }
 
     @GetMapping("/users")
-    public Collection<User> getAllUsers()  {
+    public Collection<User> getAllUsers() {
         log.debug("Запрошен список всех пользователей");
         return userService.getAllUsers();
     }

@@ -71,7 +71,6 @@ public class InMemoryFilmStorage implements FilmStorage {
             throw new NotFoundException("Отрицательное значение");
         }
         Film film = getFilmById(filmId);
-        // film.getLikes().remove(getFilmById(filmId));
         film.deleteLike(like);
         log.debug("Удаление лайков");
         updateFilm(film);

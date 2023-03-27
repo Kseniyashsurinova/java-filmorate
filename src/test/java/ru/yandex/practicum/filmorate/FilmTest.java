@@ -78,13 +78,13 @@ public class FilmTest {
     }
 
     @Test
-    public void getFilmById(){
+    public void getFilmById() {
         filmController.addFilm(film);
         Assertions.assertEquals(film, filmController.getFilmById(1));
     }
 
     @Test
-    public void addLikes(){
+    public void addLikes() {
         filmController.addFilm(film);
         filmController.addLikes(user.getId(), 1);
         Assertions.assertEquals(film.getLikes().size(), 1);

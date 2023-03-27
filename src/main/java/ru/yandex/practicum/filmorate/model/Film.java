@@ -39,7 +39,7 @@ public class Film {
 
     private Set<Integer> likes = new HashSet<>();
 
-    public void deleteLike(Integer id){
+    public void deleteLike(Integer id) {
         likes.remove(id);
     }
 }
