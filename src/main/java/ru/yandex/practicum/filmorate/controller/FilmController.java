@@ -57,10 +57,10 @@ public class FilmController {
         filmService.removeLikes(id, userId);
     }
 
-    @GetMapping("/films/popular")
-    public Collection<Film> popularFilms(@RequestParam(defaultValue = "10", required = false) int amount) {
+    @GetMapping("/films/popular{count}")
+    public Collection<Film> popularFilms(@RequestParam(defaultValue = "10") int count) {
         log.debug("пользователь удаляет лайк");
-        return filmService.topFilms(amount);
+        return filmService.topFilms(count);
     }
 
 }

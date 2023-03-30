@@ -13,27 +13,27 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class FilmService {
-    private final FilmStorage FilmStorage;
+    private final FilmStorage filmStorage;
 
     @Autowired
     public FilmService(FilmStorage filmStorage) {
-        this.FilmStorage = filmStorage;
+        this.filmStorage = filmStorage;
     }
 
     public Film addFilm(Film film) {
-        return FilmStorage.addFilm(film);
+        return filmStorage.addFilm(film);
     }
 
     public Film updateFilm(Film film) {
-        return FilmStorage.updateFilm(film);
+        return filmStorage.updateFilm(film);
     }
 
     public Collection<Film> getAllFilms() {
-        return FilmStorage.getAllFilms();
+        return filmStorage.getAllFilms();
     }
 
     public Film getFilmById(int filmId) {
-        return FilmStorage.getFilmById(filmId);
+        return filmStorage.getFilmById(filmId);
     }
 
     // Добавление лайков
@@ -56,9 +56,9 @@ public class FilmService {
         updateFilm(film);
     }
 
-    //Топ популярных фильмов
+    //Топ популярных фильмов по лайкам
     public Collection<Film> topFilms(int amount) {
-        return FilmStorage.getAllFilms().stream()
+        return filmStorage.getAllFilms().stream()
                 .sorted((o1, o2) -> o2.getLikes().size() - o1.getLikes().size())
                 .limit(amount)
                 .collect(Collectors.toList());

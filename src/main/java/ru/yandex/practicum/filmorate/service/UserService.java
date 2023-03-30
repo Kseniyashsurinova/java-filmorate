@@ -90,14 +90,6 @@ public class UserService {
         Set<Integer> friendsList = new HashSet<>(Set.copyOf(getUserById(user1Id).getFriends()));
         friendsList.retainAll(getUserById(user2Id).getFriends());
         Set<User> commonFriendsList = new HashSet<>();
-        User user1 = getUserById(user1Id);
-        if (user1.getFriends().isEmpty()) {
-            throw new NotFoundException("Список друзей у пользователя пуст");
-        }
-        User user2 = getUserById(user2Id);
-        if (user2.getFriends().isEmpty()) {
-            throw new NotFoundException("Список друзей у пользователя пуст");
-        }
         for (Integer id : friendsList) {
             commonFriendsList.add(getUserById(id));
         }
