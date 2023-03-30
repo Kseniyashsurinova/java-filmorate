@@ -42,4 +42,13 @@ public class Film {
     public void deleteLike(Integer id) {
         likes.remove(id);
     }
+
+    public Film(int id, String name, String description, Integer duration, LocalDate releaseDate, Set<Integer> likes) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.duration = duration;
+        this.releaseDate = releaseDate;
+        this.likes = new HashSet<>();
+    }
 }

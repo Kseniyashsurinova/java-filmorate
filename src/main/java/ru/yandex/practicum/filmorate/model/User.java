@@ -41,7 +41,7 @@ public class User {
         this.login = login;
         this.birthday = birthday;
         this.name = getNameOrLogin(name, login);
-        this.friends = friends;
+        this.friends = new HashSet<>();
     }
 
     private String getNameOrLogin(String name, String login) {

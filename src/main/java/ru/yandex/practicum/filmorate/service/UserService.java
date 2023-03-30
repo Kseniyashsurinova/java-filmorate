@@ -3,51 +3,107 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class UserService {
-    private final InMemoryUserStorage inMemoryUserStorage;
+    private final UserStorage userStorage;
 
     @Autowired
-    public UserService(InMemoryUserStorage inMemoryUserStorage) {
-        this.inMemoryUserStorage = inMemoryUserStorage;
+    public UserService(UserStorage userStorage) {
+        this.userStorage = userStorage;
     }
 
     public User createUser(User user) {
-        return inMemoryUserStorage.createUser(user);
+        return userStorage.createUser(user);
     }
 
     public User updateUser(User user) {
-        return inMemoryUserStorage.updateUser(user);
+        return userStorage.updateUser(user);
     }
 
     public Collection<User> getAllUsers() {
-        return inMemoryUserStorage.getAllUsers();
+        return userStorage.getAllUsers();
     }
 
     public User getUserById(Integer id) {
-        return inMemoryUserStorage.getUserById(id);
+        return userStorage.getUserById(id);
     }
 
-    public User addFriend(int id, int friendId) {
-        return inMemoryUserStorage.addFriend(id, friendId);
+    // Добавить список друзей
+    public User addFriend(Integer id, Integer friendId) { //throws NotFoundException {
+        if (userStorage.getUserById(id) == null) {
+            throw new NotFoundException("Один из пользователей не найден");
+        } else if (userStorage.getUserById(friendId) == null) {
+            throw new NotFoundException("Один из пользователей не найден");
+        } else {
+            User user = getUserById(id);
+            User friend = getUserById(friendId);
+            user.getFriends().add(friendId);
+            log.debug("Добавлен новый друг пользователю");
+            updateUser(user);
+            friend.getFriends().add(id);
+            log.debug("Другу добавляется пользователь");
+            updateUser(friend);
+            return user;
+        }
     }
 
+    //Удаление друзей по айди
     public void removeFriend(Integer id, Integer friendId) {
-        inMemoryUserStorage.removeFriend(id, friendId);
+        if (userStorage.getUserById(id) == null) {
+            throw new NotFoundException("пользователя не найден");
+        } else if (userStorage.getUserById(friendId) == null) {
+            throw new NotFoundException("пользователя не найден");
+        } else {
+            User user = getUserById(id);
+            User friend = getUserById(friendId);
+            getFriend(id).remove(friend);
+            updateUser(user);
+            log.debug("Друг удалён у пользователя");
+
+            getFriend(friendId).remove(user);
+            log.debug("Пользователь удален у друга");
+            updateUser(friend);
+        }
     }
 
+    // получения списка друзей
     public Collection<User> getFriend(Integer id) {
-        return inMemoryUserStorage.getFriend(id);
+        if (userStorage.getUserById(id) == null) {
+            throw new NotFoundException("пользователь не найден");
+        }
+        User user = getUserById(id);
+        return user.getFriends().stream()
+                .map(userStorage::getUserById)
+                .collect(Collectors.toList());
     }
 
-    public Set<User> getCommonFriends(int user1Id, int user2Id) {
-        return inMemoryUserStorage.getCommonFriends(user1Id, user2Id);
+    //получение общих друзей
+    public Collection<User> getCommonFriends(int user1Id, int user2Id) {
+        Set<Integer> friendsList = new HashSet<>(Set.copyOf(getUserById(user1Id).getFriends()));
+        friendsList.retainAll(getUserById(user2Id).getFriends());
+        Set<User> commonFriendsList = new HashSet<>();
+        User user1 = getUserById(user1Id);
+        if (user1.getFriends().isEmpty()) {
+            throw new NotFoundException("Список друзей у пользователя пуст");
+        }
+        User user2 = getUserById(user2Id);
+        if (user2.getFriends().isEmpty()) {
+            throw new NotFoundException("Список друзей у пользователя пуст");
+        }
+        for (Integer id : friendsList) {
+            commonFriendsList.add(getUserById(id));
+        }
+
+        log.info("Вывод общих друзей");
+
+        return commonFriendsList;
     }
 }

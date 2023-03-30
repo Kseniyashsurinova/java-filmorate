@@ -94,12 +94,4 @@ public class UserTest {
                 user1.getId()), userController.getFriend(user.getId()));
     }
 
-  /*  @Test
-    public void getFriend() {
-        userController.createUser(user);
-        userController.createUser(user1);
-        userController.createUser(user2);
-        userController.addFriend(user.getId(), user2.getId());
-        Assertions.assertEquals(user2, userController.getFriend(user.getId()));
-    }*/
 }

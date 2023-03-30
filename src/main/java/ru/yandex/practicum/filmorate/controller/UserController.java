@@ -8,12 +8,10 @@ import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.Set;
 
 @Slf4j
 @RestController
 @RequestMapping
-
 public class UserController {
 
     private final UserService userService;
@@ -66,7 +64,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}/friends/common/{friendId}")
-    public Set<User> getCommonFriends(@PathVariable int id, @PathVariable int friendId) {
+    public Collection<User> getCommonFriends(@PathVariable int id, @PathVariable int friendId) {
         log.debug("Запрошен список друзей, общих с другим пользователем");
         return userService.getCommonFriends(id, friendId);
     }

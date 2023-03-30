@@ -8,12 +8,10 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.List;
 
 @RestController
 @RequestMapping
 @Slf4j
-
 public class FilmController {
 
     @Autowired
@@ -35,7 +33,7 @@ public class FilmController {
         return filmService.getAllFilms();
     }
 
-    @PutMapping("/users/{id}/friends")
+    @GetMapping("/films/{id}")
     public Film getFilmById(@PathVariable int id) {
         log.debug("Получен фильм по id");
         return filmService.getFilmById(id);
@@ -60,9 +58,9 @@ public class FilmController {
     }
 
     @GetMapping("/films/popular")
-    public List<Film> popularFilms(@RequestParam (defaultValue = "10") int amount) {
+    public Collection<Film> popularFilms(@RequestParam(defaultValue = "10", required = false) int amount) {
         log.debug("пользователь удаляет лайк");
-        return filmService.popularFilms(amount);
+        return filmService.topFilms(amount);
     }
 
 }

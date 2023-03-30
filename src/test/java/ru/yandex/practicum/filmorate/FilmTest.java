@@ -10,11 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.controller.FilmController;
-import ru.yandex.practicum.filmorate.controller.UserController;
 
 import java.time.LocalDate;
 
@@ -27,12 +24,10 @@ public class FilmTest {
     private Film film1;
     private User user;
     private FilmController filmController;
-    private UserController userController;
 
     @BeforeEach
     void beforeEach() {
         filmController = new FilmController(new FilmService(new InMemoryFilmStorage()));
-        userController = new UserController(new UserService(new InMemoryUserStorage()));
         user = User.builder()
                 .id(1)
                 .email("people@ya.ru")
