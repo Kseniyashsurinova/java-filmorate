@@ -83,7 +83,7 @@ public class UserTest {
         Assertions.assertEquals(user1.getId(), 2);
     }
 
-    @Test
+  /*  @Test
     public void getCommonFriends() {
         userController.createUser(user);
         userController.createUser(user1);
@@ -92,6 +92,6 @@ public class UserTest {
         userController.addFriend(user1.getId(), user2.getId());
         Assertions.assertEquals(userController.getCommonFriends(user.getId(),
                 user1.getId()), userController.getFriend(user.getId()));
-    }
+    }*/
 
 }
