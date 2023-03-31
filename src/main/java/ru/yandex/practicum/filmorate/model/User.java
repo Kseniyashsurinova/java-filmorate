@@ -1,8 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.constraints.Email;
@@ -15,7 +13,6 @@ import java.util.Set;
 
 @Slf4j
 @Data
-@Builder
 public class User {
 
     @EqualsAndHashCode.Exclude
@@ -33,9 +30,9 @@ public class User {
     private LocalDate birthday;
 
     private String name;
-    private Set<Integer> friends = new HashSet<>();
+    protected Set<Integer> friends;
 
-    public User(int id, String email, String login, LocalDate birthday, String name, Set<Integer> friends) {
+    public User(int id, String email, String login, LocalDate birthday, String name) {
         this.id = id;
         this.email = email;
         this.login = login;
@@ -52,4 +49,5 @@ public class User {
             return name;
         }
     }
+
 }

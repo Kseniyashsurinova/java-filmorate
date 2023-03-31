@@ -21,29 +21,14 @@ public class UserTest {
     @BeforeEach
     void beforeEach() {
         userController = new UserController(new UserService(new InMemoryUserStorage()));
-        user = User.builder()
-                .id(1)
-                .email("people@ya.ru")
-                .login("Login")
-                .name("Name")
-                .birthday(LocalDate.of(2000, 10, 11))
-                .build();
+        user = new User(1, "people@ya.ru",
+                "Login", LocalDate.of(2000, 10, 11), "Name");
 
-        user1 = User.builder()
-                .id(5)
-                .email("mmm@ya.ru")
-                .login("mmm")
-                .name("New")
-                .birthday(LocalDate.of(2000, 5, 11))
-                .build();
+        user1 = new User(2, "peopl2e@ya.ru",
+                "Login21", LocalDate.of(2020, 10, 11), "Name0");
 
-        user2 = User.builder()
-                .id(6)
-                .email("mmm@ya.ru")
-                .login("mmm")
-                .name("New")
-                .birthday(LocalDate.of(2000, 5, 11))
-                .build();
+        user2 = new User(3, "peopl2e@ya.ru",
+                "Login21", LocalDate.of(2017, 10, 11), "Name.");
     }
 
     @Test
@@ -93,5 +78,4 @@ public class UserTest {
         Assertions.assertEquals(userController.getCommonFriends(user.getId(),
                 user1.getId()), userController.getFriend(user.getId()));
     }*/
-
 }

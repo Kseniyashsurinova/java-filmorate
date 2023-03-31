@@ -28,28 +28,12 @@ public class FilmTest {
     @BeforeEach
     void beforeEach() {
         filmController = new FilmController(new FilmService(new InMemoryFilmStorage()));
-        user = User.builder()
-                .id(1)
-                .email("people@ya.ru")
-                .login("Login")
-                .name("Name")
-                .birthday(LocalDate.of(2000, 10, 11))
-                .build();
-        film = Film.builder()
-                .id(1)
-                .name("Name")
-                .description("Description")
-                .releaseDate(LocalDate.of(2015, 12, 23))
-                .duration(60)
-                .build();
-
-        film1 = Film.builder()
-                .id(2)
-                .name("NameNew")
-                .description("Descriptions")
-                .releaseDate(LocalDate.of(2021, 3, 20))
-                .duration(60)
-                .build();
+        user = new User(1, "people@ya.ru",
+                "Login",  LocalDate.of(2000, 10, 11), "Name");
+        film = new Film(1, "Name", "Description",
+                68, LocalDate.of(2015, 12, 23));
+        film1 = new Film(2, "Name2", "Description2",
+                682, LocalDate.of(2019, 12, 23));
     }
 
     @Test

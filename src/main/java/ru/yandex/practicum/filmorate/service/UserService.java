@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -38,47 +37,31 @@ public class UserService {
 
     // Добавить список друзей
     public User addFriend(Integer id, Integer friendId) { //throws NotFoundException {
-        if (userStorage.getUserById(id) == null) {
-            throw new NotFoundException("Один из пользователей не найден");
-        } else if (userStorage.getUserById(friendId) == null) {
-            throw new NotFoundException("Один из пользователей не найден");
-        } else {
-            User user = getUserById(id);
-            User friend = getUserById(friendId);
-            user.getFriends().add(friendId);
-            log.debug("Добавлен новый друг пользователю");
-            updateUser(user);
-            friend.getFriends().add(id);
-            log.debug("Другу добавляется пользователь");
-            updateUser(friend);
-            return user;
-        }
+        User user = getUserById(id);
+        User friend = getUserById(friendId);
+        user.getFriends().add(friendId);
+        log.debug("Добавлен новый друг пользователю");
+        updateUser(user);
+        friend.getFriends().add(id);
+        log.debug("Другу добавляется пользователь");
+        updateUser(friend);
+        return user;
     }
 
     //Удаление друзей по айди
     public void removeFriend(Integer id, Integer friendId) {
-        if (userStorage.getUserById(id) == null) {
-            throw new NotFoundException("пользователя не найден");
-        } else if (userStorage.getUserById(friendId) == null) {
-            throw new NotFoundException("пользователя не найден");
-        } else {
-            User user = getUserById(id);
-            User friend = getUserById(friendId);
-            getFriend(id).remove(friend);
-            updateUser(user);
-            log.debug("Друг удалён у пользователя");
-
-            getFriend(friendId).remove(user);
-            log.debug("Пользователь удален у друга");
-            updateUser(friend);
-        }
+        User user = getUserById(id);
+        User friend = getUserById(friendId);
+        getFriend(id).remove(friend);
+        updateUser(user);
+        log.debug("Друг удалён у пользователя");
+        getFriend(friendId).remove(user);
+        log.debug("Пользователь удален у друга");
+        updateUser(friend);
     }
 
     // получения списка друзей
     public Collection<User> getFriend(Integer id) {
-        if (userStorage.getUserById(id) == null) {
-            throw new NotFoundException("пользователь не найден");
-        }
         User user = getUserById(id);
         return user.getFriends().stream()
                 .map(userStorage::getUserById)
@@ -93,9 +76,7 @@ public class UserService {
         for (Integer id : friendsList) {
             commonFriendsList.add(getUserById(id));
         }
-
         log.info("Вывод общих друзей");
-
         return commonFriendsList;
     }
 }
