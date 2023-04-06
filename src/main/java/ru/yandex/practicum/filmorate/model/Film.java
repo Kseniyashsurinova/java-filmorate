@@ -36,6 +36,8 @@ public class Film {
     private LocalDate releaseDate;
 
     private Set<Integer> likes;
+    private final Set<Genre> genres;
+    private Mpa mpa;
 
     public void deleteLike(Integer id) {
         likes.remove(id);
@@ -48,6 +50,7 @@ public class Film {
         this.duration = duration;
         this.releaseDate = releaseDate;
         this.likes = new HashSet<>();
+        this.genres = new HashSet<>();
     }
 
 }
