@@ -1,8 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.daoStorge;
 
 import lombok.Builder;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Genre;
