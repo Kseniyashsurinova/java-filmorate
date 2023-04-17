@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import java.util.Set;
 
 @Slf4j
 @Data
+@Builder
 public class Film {
 
     @EqualsAndHashCode.Exclude
@@ -43,7 +45,7 @@ public class Film {
         likes.remove(id);
     }
 
-    public Film(int id, String name, String description, Integer duration, LocalDate releaseDate) {
+   /* public Film(int id, String name, String description, Integer duration, LocalDate releaseDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -51,6 +53,6 @@ public class Film {
         this.releaseDate = releaseDate;
         this.likes = new HashSet<>();
         this.genres = new HashSet<>();
-    }
+    }*/
 
 }
