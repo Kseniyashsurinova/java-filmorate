@@ -7,10 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.daoStorge.FilmDbStorage;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -22,8 +25,10 @@ public class FilmTest {
                 .id(1)
                 .name("film1")
                 .description("film1 description")
-                .releaseDate(LocalDate.parse("1920-11-01"))
                 .duration(100)
+                .releaseDate(LocalDate.parse("1920-11-01"))
+                .genres(new HashSet<>(List.of(new Genre( 3,"Мультфильм"))))
+                .mpa(new Mpa(1, " G"))
                 .build();
 
         Film film1 = Film.builder()
@@ -32,12 +37,14 @@ public class FilmTest {
                 .description("film2 description")
                 .releaseDate(LocalDate.parse("1988-10-10"))
                 .duration(90)
+                .genres(new HashSet<>(List.of(new Genre(1, "Комедия"))))
+                .mpa(new Mpa(1, "G"))
                 .build();
 
     @Test
     public void createTest() {
         filmDbStorage.addFilm(film);
-        Assertions.assertEquals(1, filmDbStorage.getAllFilms().size());
+        Assertions.assertEquals(film, filmDbStorage.getAllFilms());
     }
 
     @Test
@@ -56,7 +63,7 @@ public class FilmTest {
 
     @Test
     public void getFilmById() {
-        filmDbStorage.addFilm(film);
-        Assertions.assertEquals(film, filmDbStorage.getFilmById(1));
+        filmDbStorage.addFilm(film1);
+        Assertions.assertEquals(film1, filmDbStorage.getFilmById(2));
     }
 }

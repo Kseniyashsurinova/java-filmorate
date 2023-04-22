@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS friends
 (
     user_id Integer REFERENCES users (user_id),
     friend_id Integer REFERENCES users (user_id),
+    CONSTRAINT validate_request CHECK (user_id <> user_id),
     PRIMARY KEY (user_id, friend_id)
 );
 

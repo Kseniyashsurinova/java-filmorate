@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
 @Slf4j
@@ -34,7 +35,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public User getUserById(@PathVariable int id) {
+    public User getUserById(@NotNull @PathVariable int id) {
         log.debug("Запрошен список всех пользователей");
         return userService.getUserById(id);
     }
@@ -46,9 +47,10 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}/friends/{friendId}")
-    public User addFriend(@PathVariable int id, @PathVariable int friendId) {
+    public void addFriend(@NotNull @PathVariable(value = "id") int id,
+                          @NotNull @PathVariable int friendId) {
         log.debug("Запрос добавления в друзья");
-        return userService.addFriend(id, friendId);
+        userService.addFriend(id, friendId);
     }
 
     @DeleteMapping("/users/{id}/friends/{friendId}")
@@ -58,7 +60,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}/friends")
-    public Collection<User> getFriend(@PathVariable Integer id) {
+    public Collection<User> getFriend(@PathVariable int id) {
         log.debug("Запрос списка всех друзей пользователя");
         return userService.getFriend(id);
     }

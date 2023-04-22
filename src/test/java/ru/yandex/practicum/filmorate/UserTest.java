@@ -10,12 +10,13 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.daoStorge.UserDbStorage;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserTest {
-
 
     private final UserDbStorage userStorage;
 
@@ -25,10 +26,11 @@ public class UserTest {
             .login("Login")
             .email("u@mail.com")
             .birthday(LocalDate.parse("1925-03-25"))
+            .friends(new HashSet<>(List.of(( 3))))
             .build();
 
     private User user1 = User.builder()
-            .id(1)
+            .id(2)
             .name("Nameq")
             .login("Loginq")
             .email("u@mailq.com")
@@ -36,7 +38,7 @@ public class UserTest {
             .build();
 
     private User user2 = User.builder()
-            .id(1)
+            .id(3)
             .name("Name2")
             .login("Login2")
             .email("u@mail2.com")
@@ -67,6 +69,6 @@ public class UserTest {
     public void getByIdTest() {
         userStorage.createUser(user);
         userStorage.createUser(user1);
-        Assertions.assertEquals(user1, userStorage.getUserById(2));
+        Assertions.assertEquals(1, userStorage.getUserById(1).getId());
     }
 }

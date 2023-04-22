@@ -45,18 +45,6 @@ public class FilmController {
         return filmService.updateFilm(film);
     }
 
-    @PutMapping("/films/{id}/like/{userId}")
-    public void addLikes(@PathVariable int id, @PathVariable int userId) {
-        log.debug("пользователь ставит лайк фильму");
-        filmService.addLikes(id, userId);
-    }
-
-    @DeleteMapping("/films/{id}/like/{userId}")
-    public void removeLikes(@PathVariable int id, @PathVariable int userId) {
-        log.debug("пользователь удаляет лайк");
-        filmService.removeLikes(id, userId);
-    }
-
     @GetMapping("/films/popular{count}")
     public Collection<Film> popularFilms(@RequestParam(defaultValue = "10") int count) {
         log.debug("пользователь удаляет лайк");

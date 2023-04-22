@@ -36,22 +36,8 @@ public class Film {
     @MoviesDate(message = "Дата релиза раньше 28 декабря 1895 года")
     private LocalDate releaseDate;
 
-    private Set<Integer> likes;
+    private Set<Like> likes;
     private final Set<Genre> genres;
     private Mpa mpa;
-
-    public void deleteLike(Integer id) {
-        likes.remove(id);
-    }
-
-   /* public Film(int id, String name, String description, Integer duration, LocalDate releaseDate) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.duration = duration;
-        this.releaseDate = releaseDate;
-        this.likes = new HashSet<>();
-        this.genres = new HashSet<>();
-    }*/
 
 }

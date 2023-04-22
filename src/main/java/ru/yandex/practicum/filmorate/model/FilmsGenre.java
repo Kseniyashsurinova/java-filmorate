@@ -12,6 +12,7 @@ import lombok.Setter;
 public class FilmsGenre {
 
     private int filmId;
+
     private int genreId;
 
 }

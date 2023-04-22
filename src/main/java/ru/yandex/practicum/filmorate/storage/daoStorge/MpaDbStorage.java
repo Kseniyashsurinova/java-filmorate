@@ -24,7 +24,7 @@ public class MpaDbStorage implements MpaStorage {
 
     @Override
     public Mpa getMpaById(int id) {
-        return jdbcTemplate.query("select * from ratings WHERE id = ?", this::mapRowToMpa, id);
+        return jdbcTemplate.query("select * from ratings WHERE mpa_id = ?", this::mapRowToMpa, id);
     }
 
     private Mpa mapRowToMpa(ResultSet rs) throws SQLException {
