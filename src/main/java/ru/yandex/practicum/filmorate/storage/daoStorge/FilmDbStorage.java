@@ -3,16 +3,12 @@ package ru.yandex.practicum.filmorate.storage.daoStorge;
 import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.Like;
-import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.sql.Date;
@@ -52,10 +48,15 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film updateFilm(Film film) {
-        final String sql = "UPDATE films SET film_name = ?, description = ?, duration = ?," +
-                "releaseDate = ?, mpa_id =? WHERE film_id = ?";
-        jdbcTemplate.update(sql, film.getId(), film.getName(), film.getDescription(), film.getReleaseDate(),
-                film.getDuration(), film.getMpa().getId());
+        String sql = "UPDATE films " +
+                "SET film_name = ?, description = ?, releaseDate = ?, duration = ?, mpa_id = ?"
+                + " WHERE film_id = ?";
+        int updatedRows = jdbcTemplate.update(sql, film.getName(), film.getDescription(),
+                Date.valueOf(film.getReleaseDate()), film.getDuration(), film.getMpa().getId(), film.getId());
+        if (updatedRows == 0) {
+            throw new NotFoundException(
+                    String.format("Фильм с идентификатором %d не найден.", film.getId()));
+        }
         updateGenre(film);
         return getFilmById(film.getId());
     }
@@ -67,7 +68,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public Film getFilmById(int filmId) {
+    public Film getFilmById(int filmId) throws NotFoundException {
         String sql = "SELECT * FROM films WHERE film_id = ?";
         Film film;
         try {
@@ -82,23 +83,24 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private Film makeFilm(ResultSet rs) throws SQLException {
-        return Film.builder()
+        Film film = Film.builder()
                 .id(rs.getInt("film_id"))
                 .name(rs.getString("film_name"))
                 .description(rs.getString("description"))
                 .duration(rs.getInt("duration"))
                 .releaseDate(rs.getDate("releaseDate").toLocalDate())
-                .likes(getFilmsLikes(rs.getInt("film_id")))
-                .genres(getFilmGenresById(rs.getInt("film_id")))
+                .genres(new HashSet<>(rs.getInt("film_id")))
                 .mpa(getFilMpa(rs.getInt("mpa_id")))
                 .build();
+        return film;
     }
 
-    private Set<Genre> getFilmGenresById(int id) {
-        final String sql = "SELECT * FROM films_ganre INNER JOIN genres ON genres.genre_id = films_ganre.genre_id"
-                + " WHERE film_id = ?";
-        return new HashSet<>(jdbcTemplate.query(sql, (rs, getNum) -> Genre.builder().id(rs.getInt("genre_id"))
-                .name(rs.getString("genre_name")).build(), id));
+    private List<Genre> getFilmGenres(int id) throws NotFoundException {
+        final String sql = "SELECT *  FROM genres AS g " +
+                "JOIN films_ganre AS f ON g.genre_id = f.genre_id " +
+                "WHERE f.film_id = ?;";
+        return jdbcTemplate.query(sql, (rs, getNum) -> Genre.builder().id(rs.getInt("genre_id"))
+                .name(rs.getString("genre_name")).build(), id);
     }
 
     private Mpa getFilMpa(int id) throws SQLException {
@@ -108,31 +110,26 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private void updateGenre(Film film) {
-        String deleteGenres = "DELETE FROM films_ganre WHERE film_id = ?";
-        jdbcTemplate.update(deleteGenres, film.getId());
-        List<Genre> genresList = new ArrayList<>(film.getGenres());
-        String sql = "INSERT INTO films_ganre (film_id, genre_id) VALUES (?, ?)";
-        genresList.forEach(x -> jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement ps, int i) throws SQLException {
-                ps.setInt(1, film.getId());
-                ps.setInt(2, genresList.get(i).getId());
+        if (film.getGenres() != null) {
+            jdbcTemplate.update("delete from films_ganre where film_id = ?", film.getId());
+            for (Genre genre : film.getGenres()) {
+                jdbcTemplate.update(
+                        "insert into films_ganre(film_id, genre_id) " +
+                                "values (?, ?)",
+                        film.getId(),
+                        genre.getId()
+                );
             }
-
-            @Override
-            public int getBatchSize() {
-                return genresList.size();
-            }
-        }));
+            film.setGenres(new TreeSet<>(film.getGenres()));
+        }
     }
 
     private Set<Like> getFilmsLikes(int id) {
-        final String sql = "SELECT users.* FROM likes JOIN users ON likes.user_id = users.user_id " +
-                "WHERE likes.film_id=?";
+        final String sql = "SELECT * FROM users AS u JOIN likes AS l ON l.user_id = u.user_id " +
+                "WHERE l.film_id = ?";
         return new HashSet<>(jdbcTemplate.query(sql, (rs, getNum) -> Like.builder()
                 .filmId(rs.getInt("film_id"))
                 .userId(rs.getInt("user_id"))
                 .build(), id));
     }
-
 }

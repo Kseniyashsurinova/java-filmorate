@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.daoStorge;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -59,12 +60,11 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public User getUserById(int id) {
+    public User getUserById(int id) throws NotFoundException {
         String sql = "select * from users WHERE user_id = ? ";
         try {
-            User user = jdbcTemplate.queryForObject(sql, (ResultSet rs, int rowNum)
+           return jdbcTemplate.queryForObject(sql, (ResultSet rs, int rowNum)
                     -> mapRowUser(rs), id);
-            return user;
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException(String.format("Пользователь с идентификатором %d не найден.", id));
         }
@@ -84,7 +84,13 @@ public class UserDbStorage implements UserStorage {
     public void addFriend(int id, int friendId) {
         String sql = "INSERT INTO friends(user_id, friend_id) " +
                 "values (?, ?)";
-        jdbcTemplate.update(sql, id, friendId);
+        try {
+           jdbcTemplate.update(sql, id, friendId);
+        } catch (DataIntegrityViolationException e) {
+            log.debug("Пользователь с идентификатором {} или {} не найден.", id, friendId);
+            throw new NotFoundException(
+                    String.format("Пользователь с идентификатором %d или %d не найден.",id, friendId));
+        }
     }
 
     @Override

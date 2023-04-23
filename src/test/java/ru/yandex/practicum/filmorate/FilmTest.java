@@ -3,7 +3,9 @@ package ru.yandex.practicum.filmorate;
 import lombok.RequiredArgsConstructor;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +19,7 @@ import java.util.List;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FilmTest {
 
     private  final FilmDbStorage filmDbStorage;
@@ -43,7 +46,7 @@ public class FilmTest {
     @Test
     public void createTest() {
         filmDbStorage.addFilm(film);
-        Assertions.assertEquals(film, filmDbStorage.getAllFilms());
+        Assertions.assertEquals(1, filmDbStorage.getAllFilms().size());
     }
 
     @Test

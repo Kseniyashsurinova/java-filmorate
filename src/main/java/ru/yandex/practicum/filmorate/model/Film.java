@@ -37,7 +37,9 @@ public class Film {
     private LocalDate releaseDate;
 
     private Set<Like> likes;
-    private final Set<Genre> genres;
+
+    private Set<Genre> genres;
     private Mpa mpa;
+
 
 }

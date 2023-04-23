@@ -33,7 +33,6 @@ public class UserService {
     }
 
     public User getUserById(Integer id) {
-
         return userStorage.getUserById(id);
     }
 
@@ -41,7 +40,6 @@ public class UserService {
     public void addFriend(int id, int friendId) throws NotFoundException {
         userStorage.getUserById(id);
         userStorage.getUserById(friendId);
-        userStorage.addFriend(id, friendId);
         userStorage.addFriend(id, friendId);
         log.info("Пользователь {} теперь друг {}", friendId, id);
     }
