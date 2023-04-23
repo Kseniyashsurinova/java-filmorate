@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -10,11 +11,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 @Slf4j
 @Data
+@Builder
 public class Film {
 
     @EqualsAndHashCode.Exclude
@@ -35,22 +36,10 @@ public class Film {
     @MoviesDate(message = "Дата релиза раньше 28 декабря 1895 года")
     private LocalDate releaseDate;
 
-    private Set<Integer> likes;
-    private final Set<Genre> genres;
+    private Set<Like> likes;
+
+    private Set<Genre> genres;
     private Mpa mpa;
 
-    public void deleteLike(Integer id) {
-        likes.remove(id);
-    }
-
-    public Film(int id, String name, String description, Integer duration, LocalDate releaseDate) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.duration = duration;
-        this.releaseDate = releaseDate;
-        this.likes = new HashSet<>();
-        this.genres = new HashSet<>();
-    }
 
 }

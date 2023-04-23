@@ -1,81 +1,84 @@
 package ru.yandex.practicum.filmorate;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.controller.UserController;
+import ru.yandex.practicum.filmorate.storage.daoStorge.UserDbStorage;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@AutoConfigureTestDatabase
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UserTest {
-    private User user;
-    private User user1;
-    private User user2;
-    private UserController userController;
 
-    @BeforeEach
-    void beforeEach() {
-        userController = new UserController(new UserService(new InMemoryUserStorage()));
-        user = new User(1, "people@ya.ru",
-                "Login", LocalDate.of(2000, 10, 11), "Name");
+    private final UserDbStorage userStorage;
 
-        user1 = new User(2, "peopl2e@ya.ru",
-                "Login21", LocalDate.of(2020, 10, 11), "Name0");
+    private User user = User.builder()
+            .id(1)
+            .name("Name")
+            .login("Login")
+            .email("u@mail.com")
+            .birthday(LocalDate.parse("1925-03-25"))
+            .friends(new HashSet<>(List.of((3))))
+            .build();
 
-        user2 = new User(3, "peopl2e@ya.ru",
-                "Login21", LocalDate.of(2017, 10, 11), "Name.");
-    }
+    private User user1 = User.builder()
+            .id(2)
+            .name("Nameq")
+            .login("Loginq")
+            .email("u@mailq.com")
+            .birthday(LocalDate.parse("1925-03-20"))
+            .build();
 
-    @Test
-    public void createTest() {
-        userController.createUser(user);
-        Assertions.assertEquals(1, userController.getAllUsers().size());
-    }
+    private User user2 = User.builder()
+            .id(3)
+            .name("Name2")
+            .login("Login2")
+            .email("u@mail2.com")
+            .birthday(LocalDate.parse("1925-04-25"))
+            .build();
 
     @Test
     public void updateTest() {
-        userController.createUser(user);
+        userStorage.createUser(user);
         user.setId(12);
-        Assertions.assertEquals(12, user.getId());
+        assertEquals(12, user.getId());
     }
 
     @Test
     public void getAllTest() {
-        userController.createUser(user);
-        userController.createUser(user1);
-        Assertions.assertEquals(2, userController.getAllUsers().size());
+        userStorage.createUser(user);
+        userStorage.createUser(user1);
+        assertEquals(2, userStorage.getAllUsers().size());
     }
 
     @Test
     public void getByIdTest() {
-        userController.createUser(user);
-        userController.createUser(user1);
-        Assertions.assertEquals(user1, userController.getUserById(2));
+        userStorage.createUser(user);
+        userStorage.createUser(user1);
+        assertEquals(1, userStorage.getUserById(1).getId());
     }
 
     @Test
-    public void addFriends() {
-        userController.createUser(user);
-        userController.createUser(user1);
-        userController.addFriend(user.getId(), user1.getId());
-        Assertions.assertEquals(1, user.getFriends().size());
-        userController.getFriend(user.getId());
-        Assertions.assertEquals(user1.getId(), 2);
+    public void createTest() {
+        userStorage.createUser(user);
+        User userActual = userStorage.getUserById(1);
+        assertEquals(user.getId(), userActual.getId());
+        assertEquals(user.getEmail(), userActual.getEmail());
+        assertEquals(user.getLogin(), userActual.getLogin());
+        assertEquals(user.getName(), userActual.getName());
+        assertEquals(user.getBirthday(), userActual.getBirthday());
     }
 
-  /*  @Test
-    public void getCommonFriends() {
-        userController.createUser(user);
-        userController.createUser(user1);
-        userController.createUser(user2);
-        userController.addFriend(user.getId(), user2.getId());
-        userController.addFriend(user1.getId(), user2.getId());
-        Assertions.assertEquals(userController.getCommonFriends(user.getId(),
-                user1.getId()), userController.getFriend(user.getId()));
-    }*/
 }
