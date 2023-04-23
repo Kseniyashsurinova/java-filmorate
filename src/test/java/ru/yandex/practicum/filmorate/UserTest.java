@@ -71,4 +71,6 @@ public class UserTest {
         userStorage.createUser(user1);
         Assertions.assertEquals(1, userStorage.getUserById(1).getId());
     }
+
+
 }

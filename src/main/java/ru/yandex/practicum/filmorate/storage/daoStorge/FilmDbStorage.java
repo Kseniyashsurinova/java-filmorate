@@ -81,18 +81,18 @@ public class FilmDbStorage implements FilmStorage {
         }
     }
 
-   private Film makeFilm(ResultSet rs) throws SQLException {
-       return Film.builder()
-               .id(rs.getInt("film_id"))
-               .name(rs.getString("film_name"))
-               .description(rs.getString("description"))
-               .duration(rs.getInt("duration"))
-               .releaseDate(rs.getDate("releaseDate").toLocalDate())
-               .likes(getFilmsLikes(rs.getInt("film_id")))
-               .genres(getFilmGenresById(rs.getInt("film_id")))
-               .mpa(getFilMpa(rs.getInt("mpa_id")))
-               .build();
-   }
+    private Film makeFilm(ResultSet rs) throws SQLException {
+        return Film.builder()
+                .id(rs.getInt("film_id"))
+                .name(rs.getString("film_name"))
+                .description(rs.getString("description"))
+                .duration(rs.getInt("duration"))
+                .releaseDate(rs.getDate("releaseDate").toLocalDate())
+                .likes(getFilmsLikes(rs.getInt("film_id")))
+                .genres(getFilmGenresById(rs.getInt("film_id")))
+                .mpa(getFilMpa(rs.getInt("mpa_id")))
+                .build();
+    }
 
     private Set<Genre> getFilmGenresById(int id) {
         final String sql = "SELECT * FROM films_ganre INNER JOIN genres ON genres.genre_id = films_ganre.genre_id"
@@ -110,20 +110,21 @@ public class FilmDbStorage implements FilmStorage {
     private void updateGenre(Film film) {
         String deleteGenres = "DELETE FROM films_ganre WHERE film_id = ?";
         jdbcTemplate.update(deleteGenres, film.getId());
-            List<Genre> genresList = new ArrayList<>(film.getGenres());
-            String sql = "INSERT INTO films_ganre (film_id, genre_id) VALUES (?, ?)";
-            genresList.forEach(x -> jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
-                @Override
-                public void setValues(PreparedStatement ps, int i) throws SQLException {
-                    ps.setInt(1, film.getId());
-                    ps.setInt(2, genresList.get(i).getId());
-                }
-                @Override
-                public int getBatchSize() {
-                    return genresList.size();
-                }
-            }));
-        }
+        List<Genre> genresList = new ArrayList<>(film.getGenres());
+        String sql = "INSERT INTO films_ganre (film_id, genre_id) VALUES (?, ?)";
+        genresList.forEach(x -> jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setInt(1, film.getId());
+                ps.setInt(2, genresList.get(i).getId());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return genresList.size();
+            }
+        }));
+    }
 
     private Set<Like> getFilmsLikes(int id) {
         final String sql = "SELECT users.* FROM likes JOIN users ON likes.user_id = users.user_id " +
