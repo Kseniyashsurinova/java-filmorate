@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate;
 
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -12,6 +11,8 @@ import ru.yandex.practicum.filmorate.storage.daoStorge.UserDbStorage;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -26,7 +27,7 @@ public class UserTest {
             .login("Login")
             .email("u@mail.com")
             .birthday(LocalDate.parse("1925-03-25"))
-            .friends(new HashSet<>(List.of(( 3))))
+            .friends(new HashSet<>(List.of((3))))
             .build();
 
     private User user1 = User.builder()
@@ -46,31 +47,35 @@ public class UserTest {
             .build();
 
     @Test
-    public void createTest() {
-        userStorage.createUser(user);
-        Assertions.assertEquals(1, userStorage.getAllUsers().size());
-    }
-
-    @Test
     public void updateTest() {
         userStorage.createUser(user);
         user.setId(12);
-        Assertions.assertEquals(12, user.getId());
+        assertEquals(12, user.getId());
     }
 
     @Test
     public void getAllTest() {
         userStorage.createUser(user);
         userStorage.createUser(user1);
-        Assertions.assertEquals(2, userStorage.getAllUsers().size());
+        assertEquals(2, userStorage.getAllUsers().size());
     }
 
     @Test
     public void getByIdTest() {
         userStorage.createUser(user);
         userStorage.createUser(user1);
-        Assertions.assertEquals(1, userStorage.getUserById(1).getId());
+        assertEquals(1, userStorage.getUserById(1).getId());
     }
 
+    @Test
+    public void createTest() {
+        userStorage.createUser(user);
+        User userActual = userStorage.getUserById(1);
+        assertEquals(user.getId(), userActual.getId());
+        assertEquals(user.getEmail(), userActual.getEmail());
+        assertEquals(user.getLogin(), userActual.getLogin());
+        assertEquals(user.getName(), userActual.getName());
+        assertEquals(user.getBirthday(), userActual.getBirthday());
+    }
 
 }

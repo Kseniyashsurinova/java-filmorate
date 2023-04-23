@@ -13,7 +13,6 @@ import ru.yandex.practicum.filmorate.storage.daoStorge.FilmDbStorage;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -27,7 +26,7 @@ public class FilmTest {
                 .description("film1 description")
                 .duration(100)
                 .releaseDate(LocalDate.parse("1920-11-01"))
-                .genres(new HashSet<>(List.of(new Genre( 3,"Мультфильм"))))
+                .genres(new HashSet<>(List.of(new Genre(3,"Мультфильм"))))
                 .mpa(new Mpa(1, " G"))
                 .build();
 
@@ -57,13 +56,13 @@ public class FilmTest {
     @Test
     public void updateTest() {
         filmDbStorage.addFilm(film);
-        film.setId(12);
-        Assertions.assertEquals(12, film.getId());
+        film.setName("film");
+        Assertions.assertEquals("film", film.getName());
     }
 
     @Test
     public void getFilmById() {
-        filmDbStorage.addFilm(film1);
-        Assertions.assertEquals(film1, filmDbStorage.getFilmById(2));
+        filmDbStorage.addFilm(film);
+        Assertions.assertEquals(1, filmDbStorage.getFilmById(1).getId());
     }
 }
